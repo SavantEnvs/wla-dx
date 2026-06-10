@@ -1,0 +1,23 @@
+.MEMORYMAP
+DEFAULTSLOT 0
+SLOTSIZE $4000
+SLOT 0 $0000
+.ENDME
+
+.ROMBANKMAP
+BANKSTOTAL 1
+BANKSIZE $4000
+BANKS 1
+.ENDRO
+
+.BANK 0 SLOT 0
+.ORG 0
+
+Start:
+  di
+  ld sp, $dff0
+  ld a, $01
+  ld b, a
+  add a, b
+  nop
+  jp Start
