@@ -1,0 +1,25 @@
+.MEMORYMAP
+DEFAULTSLOT 0
+SLOTSIZE $4000
+SLOT 0 $8000
+.ENDME
+
+.ROMBANKMAP
+BANKSTOTAL 1
+BANKSIZE $4000
+BANKS 1
+.ENDRO
+
+.BANK 0 SLOT 0
+.ORG 0
+
+Start:
+  sei
+  cld
+  lda #$00
+  sta $2000
+  ldx #$ff
+  txs
+Loop:
+  nop
+  jmp Loop
