@@ -1,0 +1,17 @@
+project: savantenvs/wla-dx
+target: wla-6502
+
+# File-input (CLI) target: feed the fuzz bytes as a 6502 assembly source file to wla-6502 — the WLA-DX
+# 6502 macro assembler. The whole front end (scanner, preprocessor, macro expansion, parser,
+# phase_1..phase_4, 6502 instruction encoding) runs on the input. Not libFuzzer: the natural fuzz surface
+# is the assembler on a source file. `-o <out>` writes the output relative to the (writable) working directory, so the assembler
+# never tries to write next to the (read-only) input; @@ is the input-file placeholder.
+# A second architecture alongside the ported wla-z80 — same WLA front end, different instruction tables.
+cmds:
+  - cmd: /mayhem/wla-6502 -o wla-6502-out.o @@
+    # wla-* assemblers are arena-by-exit; see Mayhemfile_wla-z80. Leak detection is switched off at build
+    # time (mayhem/lsan_off.c, linked by build.sh); no runtime sanitizer option is set here. ASan
+    # overflow/UAF + all of UBSan remain on and halting.
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/wla-6502/testsuite
